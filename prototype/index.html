@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>UniLecta · Simulación del recorrido</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Ir al contenido principal</a>
+    <main id="main" class="layout">
+      <header>
+        <p class="brand">UniLecta</p>
+        <p class="brand-meaning">Universal · Lectura · Accesible</p>
+        <p class="eyebrow">Simulación conceptual · no procesa documentos</p>
+        <h1>Haz que tu documento sea más fácil de entender</h1>
+        <p>Sube un archivo. Elige qué quieres hacer. Descarga tus resultados.</p>
+      </header>
+
+      <section aria-labelledby="upload-title" class="panel">
+        <h2 id="upload-title">1. Adjunta el documento</h2>
+        <label for="source-file">Archivo original</label>
+        <input id="source-file" type="file" accept=".doc,.docx,.pdf,.txt,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/pdf,text/plain" aria-describedby="format-help privacy-help">
+        <p id="format-help" class="hint">Formatos previstos: Word (.doc y .docx), PDF y TXT (texto sin formato). Los PDF escaneados necesitarán reconocimiento de texto.</p>
+        <p id="privacy-help" class="hint">Este prototipo no abre, lee ni envía tu archivo. La simulación usa siempre un documento de ejemplo independiente.</p>
+        <p id="file-status" class="status" role="status" aria-live="polite">Todavía no has seleccionado un archivo. Puedes ver la simulación igualmente.</p>
+
+      </section>
+
+      <section aria-labelledby="choose-title" class="panel">
+        <h2 id="choose-title">2. Elige qué quieres hacer</h2>
+        <fieldset class="choices">
+          <legend>Elige una o más opciones</legend>
+          <div class="choice">
+            <label for="audit-choice">
+              <input id="audit-choice" type="checkbox">
+              <span><strong>Revisar el documento original</strong><small>Ver qué partes pueden ser difíciles de entender o leer.</small></span>
+            </label>
+          </div>
+          <div class="choice">
+            <label for="adapt-choice">
+              <input id="adapt-choice" type="checkbox">
+              <span><strong>Adaptar a lectura fácil</strong><small>Preparar un archivo nuevo.</small></span>
+            </label>
+          </div>
+          <div id="report-choice-box" class="choice is-disabled">
+            <label for="report-choice">
+              <input id="report-choice" type="checkbox" disabled aria-describedby="report-help">
+              <span><strong>Ver los cambios en detalle</strong><small>Comparar el texto original y el nuevo.</small></span>
+            </label>
+            <p id="report-help" class="choice-help">Primero marca «Adaptar a lectura fácil».</p>
+          </div>
+        </fieldset>
+        <div id="level-field" hidden>
+          <label for="level">Grado de adaptación</label>
+          <select id="level" disabled>
+            <option value="moderado">Cambios moderados</option>
+            <option value="alto">Más apoyo para comprender</option>
+          </select>
+        </div>
+        <p class="hint">No tienes que elegir el tipo de texto. El sistema deberá reconocerlo por detrás.</p>
+        <p id="choice-error" class="error" role="alert" hidden>Elige al menos una opción para continuar.</p>
+        <button id="simulate" type="button" aria-describedby="simulation-help">Ver resultado de ejemplo</button>
+        <p id="simulation-help" class="hint">La simulación no usa el archivo que selecciones. Los resultados son ejemplos.</p>
+      </section>
+
+      <section id="progress" aria-labelledby="progress-title" class="panel" hidden>
+        <h2 id="progress-title" tabindex="-1">Estamos preparando tus resultados</h2>
+        <p id="progress-message" class="status" role="status" aria-live="polite"></p>
+      </section>
+
+      <section id="outcome" aria-labelledby="outcome-title" class="panel" hidden>
+        <h2 id="outcome-title" tabindex="-1">3. Tus resultados de ejemplo</h2>
+        <p id="result-status" class="status" role="status" aria-live="polite"></p>
+        <section id="audit-output" aria-labelledby="audit-title" hidden>
+          <h3 id="audit-title">Revisión del documento original</h3>
+          <dl class="audit-list">
+            <dt>Contenido</dt>
+            <dd>El ejemplo reúne varias instrucciones en un solo párrafo. La fecha y la condición para recibir la ayuda son importantes.</dd>
+            <dt>Presentación</dt>
+            <dd>Se recomienda usar un título claro, texto más grande y más espacio entre párrafos.</dd>
+          </dl>
+          <p class="hint">Este análisis es ilustrativo. No se ha revisado tu archivo.</p>
+        </section>
+
+        <section id="adapt-output" aria-labelledby="adapt-title" hidden>
+          <div>
+            <h3 id="adapt-title">Archivo adaptado</h3>
+            <p><strong>unilecta-aviso-adaptado-ejemplo.html</strong></p>
+            <p>En esta demostración se descarga un HTML. El producto final deberá generar un archivo nuevo y conservar el diseño original cuando no dificulte la lectura.</p>
+          </div>
+          <button id="download" type="button">Descargar archivo de ejemplo</button>
+          <article class="document" aria-label="Borrador adaptado de ejemplo">
+            <h4>Aviso sobre la solicitud de ayuda</h4>
+            <div id="adapted-content"></div>
+          </article>
+          <p class="hint">Este archivo es un borrador ilustrativo. Una persona debe revisar su contenido antes de usarlo.</p>
+        </section>
+
+        <section id="report-output" aria-labelledby="report-title" hidden>
+          <h3 id="report-title">Cambios en detalle</h3>
+          <p>Se cambió «solicitar» por «pedir» y se separaron las instrucciones. La fecha y la condición para recibir la ayuda se conservaron en el ejemplo.</p>
+          <details>
+            <summary>Comparar los textos del ejemplo</summary>
+            <h4>Texto original</h4>
+            <p id="original-content"></p>
+            <h4>Texto nuevo</h4>
+            <div id="report-adapted-content"></div>
+          </details>
+          <p class="hint">Esta comparación es ilustrativa. No se ha comparado tu archivo.</p>
+        </section>
+      </section>
+
+      <footer>
+        <p>Este prototipo muestra cómo elegir procesos y recibir resultados. No lee archivos, no adapta textos automáticamente y no valida documentos en lectura fácil.</p>
+      </footer>
+    </main>
+  </body>
+</html>
